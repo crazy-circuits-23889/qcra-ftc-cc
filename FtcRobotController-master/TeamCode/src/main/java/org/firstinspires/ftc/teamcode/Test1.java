@@ -17,8 +17,8 @@ public class Test1 extends OpMode {
 
     @Override
     public void init() {
-        motorL = hardwareMap.get (DcMotor.class, "motor1");
-        motorR = hardwareMap.get (DcMotor.class, "motor2");
+        motorL = hardwareMap.get (DcMotor.class, "leftwheels");
+        motorR = hardwareMap.get (DcMotor.class, "rightwheels");
 //This is making the control hub understand what motorL and motorR are
     }
 
