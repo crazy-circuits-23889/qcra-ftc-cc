@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,8 +14,6 @@ public class Test1 extends OpMode {
     //motor1 is the left side wheels
     //motor2 is the right side wheels
 
-
-
     @Override
     public void init() {
         motorL = hardwareMap.get (DcMotor.class, "leftwheels");
@@ -26,7 +25,7 @@ public class Test1 extends OpMode {
     public void loop() {
 
         float xL = gamepad1.left_stick_x;
-        if(gamepad1.left_stick_x > 0) {
+        if (gamepad1.left_stick_x > 0) {
             motorL.setDirection(DcMotorSimple.Direction.FORWARD);
             motorL.setPower(xL);
 
@@ -34,14 +33,23 @@ public class Test1 extends OpMode {
 //This controls the left side motor
         }
         float yL = gamepad1.left_stick_y;
-        if (gamepad1.left_stick_y >0) {
+        if (gamepad1.left_stick_y > 0) {
             motorL.setDirection(DcMotorSimple.Direction.REVERSE);
-            motorL.setPower (yL);
+            motorL.setPower(yL);
+
+            telemetry.addData("Status", "Initialized");
+            telemetry.update();
+            // Wait for the game to start (driver presses PLAY)
+
+             // run until t
+                telemetry.addData("Status", "Running");
+                telemetry.update();
+
 
 //This should do the same thing as the code above this one but make it work for
 //the vertical movement of the joystick and it should make the motor go the opposite
 //direction of the code above
-        }
+            }
 
+        }
     }
-}

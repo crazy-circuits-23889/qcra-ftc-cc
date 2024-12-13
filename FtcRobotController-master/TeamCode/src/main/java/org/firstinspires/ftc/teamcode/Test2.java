@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 @TeleOp
 public class Test2 extends LinearOpMode {
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
+    public DcMotor leftDrive = null;
+    public DcMotor rightDrive = null;
 
 
     @Override
@@ -19,8 +19,8 @@ public class Test2 extends LinearOpMode {
         double max;
 
         // Define and Initialize Motors
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftDrive = hardwareMap.get(DcMotor.class, "leftwheels");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightwheels");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -34,36 +34,44 @@ public class Test2 extends LinearOpMode {
 
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData(">", "Robot Ready.  Press START.");    //
+        telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        // Wait for the game to start (driver presses START)
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData("Status", "Running");
+            telemetry.update();
 
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            // This way it's also easy to just drive straight, or just turn.
-            drive = -gamepad1.left_stick_y;
-            turn  =  gamepad1.right_stick_x;
 
-            // Combine drive and turn for blended motion.
-            left  = drive + turn;
-            right = drive - turn;
+            // Wait for the game to start (driver presses START)
+            waitForStart();
 
-            // Normalize the values so neither exceed +/- 1.0
-            max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
-                left /= max;
-                right /= max;
+            // run until the end of the match (driver presses STOP)
+            while (opModeIsActive()) {
+
+                // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
+                // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+                // This way it's also easy to just drive straight, or just turn.
+                drive = -gamepad1.left_stick_y;
+                turn = gamepad1.right_stick_x;
+
+                // Combine drive and turn for blended motion.
+                left = drive + turn;
+                right = drive - turn;
+
+                // Normalize the values so neither exceed +/- 1.0
+                max = Math.max(Math.abs(left), Math.abs(right));
+                if (max > 1.0) {
+                    left /= max;
+                    right /= max;
+                }
+
+                // Output the safe vales to the motor drives.
+                leftDrive.setPower(left);
+                rightDrive.setPower(right);
             }
-
-            // Output the safe vales to the motor drives.
-            leftDrive.setPower(left);
-            rightDrive.setPower(right);
         }
     }
 }
