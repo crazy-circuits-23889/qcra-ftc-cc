@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/FtcRobotController-master/TeamCode/build
+/FtcRobotController-master/FtcRobotController/build
