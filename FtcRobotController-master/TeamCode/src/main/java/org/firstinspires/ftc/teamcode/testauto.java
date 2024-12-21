@@ -29,6 +29,7 @@ public class testauto extends LinearOpMode {
             //CCOpModeServo.setPower(tgtPower);
             // check to see if we need to move the servo.
 
+            
             if(gamepad1.y) {
                 // move to 0 degrees.
                 servo.setPosition(0);
