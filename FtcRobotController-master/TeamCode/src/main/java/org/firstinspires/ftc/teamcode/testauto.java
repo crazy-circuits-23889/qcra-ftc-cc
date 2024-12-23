@@ -1,5 +1,5 @@
-package org.firstinspires.ftc.teamcode;
 
+package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class testauto extends LinearOpMode {
     public Servo servo = null;
 
-    @Override
+    //@Overridde
     public void runOpMode() {
 
 
@@ -25,22 +25,22 @@ public class testauto extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         double tgtPower;
         while (opModeIsActive()) {
-            tgtPower = this.gamepad1.left_stick_y;
+        //    tgtPower = this.gamepad1.left_stick_y;
             //CCOpModeServo.setPower(tgtPower);
             // check to see if we need to move the servo.
 
-            if(gamepad1.y) {
+          //  if(gamepad1.y) {
                 // move to 0 degrees.
                 servo.setPosition(0);
-            } else if (gamepad1.x || gamepad1.b) {
+           // } else if (gamepad1.x || gamepad1.b) {
                 // move to 90 degrees.
                 servo.setPosition(0.5);
-            } else if (gamepad1.a) {
+           // } else if (gamepad1.a) {
                 // move to 180 degrees.
                 servo.setPosition(1);
-            }
+            //}
             telemetry.addData("Servo Position", servo.getPosition());
-            telemetry.addData("Target Power", tgtPower);
+        //    telemetry.addData("Target Power", tgtPower);
             // telemetry.addData("Motor Power", CCOpModeServo.getPower());
             telemetry.addData("Status", "Running");
             telemetry.update();
