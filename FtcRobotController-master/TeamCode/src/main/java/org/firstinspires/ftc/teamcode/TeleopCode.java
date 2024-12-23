@@ -56,6 +56,7 @@ public class TeleopCode extends LinearOpMode {
                 right /= max;
             }
 
+
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left);
             rightDrive.setPower(right);
