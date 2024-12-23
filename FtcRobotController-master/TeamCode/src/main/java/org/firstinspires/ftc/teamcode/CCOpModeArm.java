@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @TeleOp
     public class CCOpModeArm extends LinearOpMode {
         public DcMotor leftarm = null;
+        
 public DcMotor rightarm=null;
 
         @Override
