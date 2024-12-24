@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Range;
+
 @TeleOp
-public class Test2 extends LinearOpMode {
+public class Wheels extends LinearOpMode {
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
 

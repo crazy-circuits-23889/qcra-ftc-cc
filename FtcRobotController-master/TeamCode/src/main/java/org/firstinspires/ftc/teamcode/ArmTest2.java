@@ -5,8 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 @TeleOp
-public class Test1 extends OpMode {
+public class ArmTest2 extends OpMode {
 
     DcMotor arm;
     //This is a variable it is stating that motorL and motorR are 2 motors
@@ -21,19 +22,18 @@ public class Test1 extends OpMode {
     @Override
     public void loop() {
 
-        if (gamepad2.right_trigger > 0) {
+        if (gamepad2.right_trigger > 0 & gamepad2.left_trigger == 0) {
             arm.setDirection(DcMotorSimple.Direction.FORWARD);
             arm.setPower(1);
-
-        }
-
-        arm.setPower(.2);
-
-        if (gamepad2.left_trigger > 0) {
+        } else if (gamepad2.left_trigger > 0 & gamepad2.right_trigger == 0) {
             arm.setDirection(DcMotorSimple.Direction.REVERSE);
             arm.setPower(1);
+        } else {
+        arm.setTargetPosition(arm.getCurrentPosition());
+        arm.setPower(.02);
+    }
 
-        }
+
     }
 
 }
