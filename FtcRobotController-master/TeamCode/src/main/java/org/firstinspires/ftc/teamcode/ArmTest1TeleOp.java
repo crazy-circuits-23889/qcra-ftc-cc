@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @TeleOp
-public class ArmTest1 extends OpMode {
+public class ArmTest1TeleOp extends OpMode {
 
     DcMotor arm;
     //This is a variable it is stating that motorL and motorR are 2 motors
