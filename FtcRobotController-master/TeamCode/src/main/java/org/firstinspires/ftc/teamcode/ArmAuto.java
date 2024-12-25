@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Autonomous
 public class ArmAuto extends LinearOpMode {
     public DcMotor Arm = null;
+    //sigma
 
     @Override
     public void runOpMode() throws InterruptedException {
