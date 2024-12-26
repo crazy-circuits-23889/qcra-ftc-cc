@@ -30,7 +30,6 @@ public class ArmTest2TeleOp extends OpMode {
             arm.setPower(1);
         } else {
         arm.setTargetPosition(arm.getCurrentPosition());
-        arm.setPower(.02);
     }
 
 
