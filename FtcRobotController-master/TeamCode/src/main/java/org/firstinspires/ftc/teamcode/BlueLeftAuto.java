@@ -9,9 +9,8 @@ import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 public class BlueLeftAuto extends LinearOpMode{
 
-    private DcMotor
+    private DcMotor motor = null;
 
-    @Override
     public void runOpMode() throws InterruptedException{
 
     }
