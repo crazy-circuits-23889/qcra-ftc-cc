@@ -1,20 +1,16 @@
 
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm. robotcore. hardware. Servo. Direction;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
     public class AutonomousBaseCode extends LinearOpMode {
-    static final double inc   = 0.05;
-    static final int    Cycle    =   50;
-    static final double maxPos     =  1.0;
-    static final double minPos     =  0.0;
 
-    double  position = (maxPos - minPos) / 2;
-    boolean rampUp = true;
-    public Servo intake = null;
+    public CRServo intake = null;
     public Servo claw = null;
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
@@ -23,7 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
     @Override
     public void runOpMode() {
-        intake = hardwareMap.get(Servo.class, "intake");
+        intake = hardwareMap.get(CRServo.class, "intake");
         claw = hardwareMap.get(Servo.class, "claw");
         leftDrive = hardwareMap.get(DcMotor.class, "leftwheels");
         rightDrive = hardwareMap.get(DcMotor.class, "rightwheels");
@@ -36,52 +32,52 @@ import com.qualcomm.robotcore.hardware.Servo;
         waitForStart();
 
         while (opModeIsActive()) {
-            basePos();
             Stop(3000);
-            startIntake();
+            startIntake(3, 10000);
             Stop(10000);
-           // basePos();
-            //Stop(100);
-            //armUp(1, 3000);
-            //Stop(100);
-            //armDown(1, 3000);
-            //Stop(100);
-            //forearmUp(1, 3000);
-            //Stop(100);
-            //forearmDown(1, 3000);
-            //Stop(100);
-            //forward(2,5000);
-            //Stop(100);
-            //backwards(2, 5000);
-            //Stop(100);
-            //turnLeft( 1, 3000);
-            //Stop(100);
-            //turnRight(1, 5000);
-            //Stop(10000);
-
+            reverseIntake(3, 10000);
+            Stop(10000);
+            openClaw();
+            armUp(1, 3000);
+            Stop(10000);
+            armDown(1, 3000);
+            Stop(10000);
+            forearmUp(1, 3000);
+            Stop(10000);
+            forearmDown(1, 3000);
+            Stop(10000);
+            forward(2,5000);
+            Stop(10000);
+            backwards(2, 5000);
+            Stop(10000);
+            turnLeft( 1, 3000);
+            Stop(10000);
+            turnRight(1, 5000);
+            Stop(10000);
 
         }
 
     }
 
-
-    public void basePos (){
-        intake.setPosition(0);
-        telemetry.addData("position",intake.getPosition());
-        telemetry.update();
+    public void startIntake(double power, long time) {
+        intake.setPower(power);
     }
-    public void startIntake() {
-        intake.setPosition(1);
-        telemetry.addData("takesample",intake.getPosition());
-        telemetry.update();
+    public void reverseIntake(double power, long time) {
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake.setPower(power);
     }
 
-    public void openClaw(double position) {
-        claw.setPosition(-position);
+    public void openClaw() {
+
+        //I am testing so once we remove he comment slashes add the double position into the parinthesis of the line above.
+
+      //  claw.setPosition(-position);
+        telemetry.addData("Position", claw.getPosition());
+        telemetry.update();
     }
-    public void closeClaw(double position) {
-        claw.setPosition(position);
-    }
+   // public void closeClaw(double position) {
+     //   claw.setPosition(position);
+    //}
 
     public void armUp(double power, long time)  {
         Arm.setPower(power);
