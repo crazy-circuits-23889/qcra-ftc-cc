@@ -37,31 +37,27 @@ import com.qualcomm.robotcore.hardware.Servo;
 
         while (opModeIsActive()) {
             basePos();
-            Stop(100);
+            Stop(3000);
             startIntake();
-            Stop(100);
-            basePos();
-            Stop(100);
-            openClaw(1);
-            Stop(100);
-            closeClaw(1);
-            Stop(100);
-            armUp(1, 3000);
-            Stop(100);
-            armDown(1, 3000);
-            Stop(100);
-            forearmUp(1, 3000);
-            Stop(100);
-            forearmDown(1, 3000);
-            Stop(100);
-            forward(2,5000);
-            Stop(100);
-            backwards(2, 5000);
-            Stop(100);
-            turnLeft( 1, 3000);
-            Stop(100);
-            turnRight(1, 5000);
             Stop(10000);
+           // basePos();
+            //Stop(100);
+            //armUp(1, 3000);
+            //Stop(100);
+            //armDown(1, 3000);
+            //Stop(100);
+            //forearmUp(1, 3000);
+            //Stop(100);
+            //forearmDown(1, 3000);
+            //Stop(100);
+            //forward(2,5000);
+            //Stop(100);
+            //backwards(2, 5000);
+            //Stop(100);
+            //turnLeft( 1, 3000);
+            //Stop(100);
+            //turnRight(1, 5000);
+            //Stop(10000);
 
 
         }
@@ -71,10 +67,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
     public void basePos (){
         intake.setPosition(0);
+        telemetry.addData("position",intake.getPosition());
+        telemetry.update();
     }
     public void startIntake() {
         intake.setPosition(1);
-
+        telemetry.addData("takesample",intake.getPosition());
+        telemetry.update();
     }
 
     public void openClaw(double position) {
