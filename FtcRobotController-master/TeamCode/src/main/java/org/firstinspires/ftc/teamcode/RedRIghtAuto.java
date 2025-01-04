@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
-public class BlueLeftAuto extends LinearOpMode {
+public class RedRightAuto extends LinearOpMode {
     static final double inc   = 0.05;
     static final int    Cycle    =   50;
     static final double maxPos     =  1.0;
@@ -21,9 +21,6 @@ public class BlueLeftAuto extends LinearOpMode {
     public DcMotor Arm = null;
     public DcMotor foreArm = null;
 
-<<<<<<< HEAD
-    public void runOpMode() throws InterruptedException{
-=======
     @Override
     public void runOpMode() {
         intake = hardwareMap.get(Servo.class, "intake");
@@ -57,18 +54,17 @@ public class BlueLeftAuto extends LinearOpMode {
             Stop(100);
             forearmDown(1, 3000);
             Stop(100);
-            forward(2,2000);
+            forward(2,5000);
             Stop(100);
-            backwards(2, 2000);
+            backwards(2, 5000);
             Stop(100);
-            turnLeft( 1, 1000);
+            turnLeft( 1, 3000);
             Stop(100);
-            turnRight(1, 1000);
+            turnRight(1, 5000);
             Stop(10000);
 
 
         }
->>>>>>> c53f9766598138b6b4a05c2398e0d97dbd504432
 
     }
 
@@ -125,3 +121,5 @@ public class BlueLeftAuto extends LinearOpMode {
         leftDrive.setPower(0);
     }
 }
+
+
