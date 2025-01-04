@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm. robotcore. hardware. Servo. Direction;
-
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous
     public class AutonomousBaseCode extends LinearOpMode {
 
@@ -63,8 +61,7 @@ import com.qualcomm. robotcore. hardware. Servo. Direction;
         intake.setPower(power);
     }
     public void reverseIntake(double power, long time) {
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        intake.setPower(power);
+        intake.setPower(-power);
     }
 
     public void openClaw() {
