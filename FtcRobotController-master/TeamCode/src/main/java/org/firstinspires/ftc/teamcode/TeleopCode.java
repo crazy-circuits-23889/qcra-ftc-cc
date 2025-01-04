@@ -116,7 +116,7 @@ public class TeleopCode extends LinearOpMode {
                 ClawServo.setPosition(0.25);
             } else if (gamepad2.x) {
                 // move to 180 degrees.
-                ClawServo.setPosition(1);
+                ClawServo.setPosition(0.75);
             }
             telemetry.addData("Servo Position", ClawServo.getPosition());
             telemetry.addData("Status", "Running");
