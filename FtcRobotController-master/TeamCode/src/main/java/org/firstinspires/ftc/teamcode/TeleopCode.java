@@ -27,7 +27,7 @@ public class TeleopCode extends LinearOpMode {
         leftDrive = hardwareMap.get(DcMotor.class, "leftwheels");
         rightDrive = hardwareMap.get(DcMotor.class, "rightwheels");
         forearm = hardwareMap.get(DcMotor.class, "forearm");
-        intake = hardwareMap.get(CRServo.class, "intake");
+        intake = hardwareMap.get(CRServo.class, "intake1");
         arm = hardwareMap.get(DcMotor.class, "arm");
         ClawServo = hardwareMap.get(Servo.class, "claw");
 
@@ -107,7 +107,7 @@ public class TeleopCode extends LinearOpMode {
                 ClawServo.setPosition(0);
             } else if (gamepad2.y) {
                 // move to 45 degrees.
-                ClawServo.setPosition(1);
+                ClawServo.setPosition(0.25);
             } else if (gamepad2.x) {
                 // move to 180 degrees.
                 ClawServo.setPosition(1);
