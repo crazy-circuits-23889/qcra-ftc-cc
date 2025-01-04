@@ -21,9 +21,6 @@ public class BlueLeftAuto extends LinearOpMode {
     public DcMotor Arm = null;
     public DcMotor foreArm = null;
 
-<<<<<<< HEAD
-    public void runOpMode() throws InterruptedException{
-=======
     @Override
     public void runOpMode() {
         intake = hardwareMap.get(Servo.class, "intake");
@@ -68,7 +65,6 @@ public class BlueLeftAuto extends LinearOpMode {
 
 
         }
->>>>>>> c53f9766598138b6b4a05c2398e0d97dbd504432
 
     }
 
