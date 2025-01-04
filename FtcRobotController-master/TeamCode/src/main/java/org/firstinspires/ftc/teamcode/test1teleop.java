@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class TeleopCode extends LinearOpMode {
+public class test1teleop extends LinearOpMode {
     public CRServo intake = null;
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
@@ -47,7 +47,7 @@ public class TeleopCode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-           //start wheel code
+            //start wheel code
             drive = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
 
@@ -78,14 +78,15 @@ public class TeleopCode extends LinearOpMode {
             }
             //end forearm code
 
-                //start intake code
             if (gamepad2.a){
+                intake.setPower(0);
                 intake.setPower(1); telemetry.addData("Servo Position", intake.getPower());
                 // telemetry.addData("Motor Power", CCOpModeServo.getPower());
                 telemetry.addData("Status", "Running");
                 telemetry.update();
                 //end intake code
             } else if (gamepad2.b) {
+                intake.setPower(0);
                 intake.setPower(-1);
                 telemetry.addData("Servo Position", intake.getPower());
                 // telemetry.addData("Motor Power", CCOpModeServo.getPower());
@@ -93,21 +94,17 @@ public class TeleopCode extends LinearOpMode {
                 telemetry.update();
                 //end intake code
             }
+            //start arm code
+            if (gamepad2.right_trigger == 1) {
+                arm.setPower(0.5); // Move arm up
+            } else if (gamepad2.left_trigger == 1) {
+                arm.setPower(-0.5); // Move arm down
+            } else if(gamepad2.right_bumper) {
+                arm.setPower(0); // Stop arm
+            }
+            //end arm code
 
-
-
-
-                //start arm code
-                if (gamepad2.right_trigger == 1) {
-                    arm.setPower(0.5); // Move arm up
-                } else if (gamepad2.left_trigger == 1) {
-                    arm.setPower(-0.5); // Move arm down
-                } else if(gamepad2.right_bumper) {
-                    arm.setPower(0); // Stop arm
-                }
-                //end arm code
-
-                //start claw code
+            //start claw code
             if(gamepad2.dpad_right) {
                 // move to 0 degrees.
                 ClawServo.setPosition(0);
