@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class TeleopCode extends LinearOpMode {
-    public Servo servo = null;
+    public CRServo intake = null;
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
     public DcMotor forearm = null;
@@ -26,7 +27,7 @@ public class TeleopCode extends LinearOpMode {
         leftDrive = hardwareMap.get(DcMotor.class, "leftwheels");
         rightDrive = hardwareMap.get(DcMotor.class, "rightwheels");
         forearm = hardwareMap.get(DcMotor.class, "forearm");
-        servo = hardwareMap.get(Servo.class, "intake");
+        intake = hardwareMap.get(CRServo.class, "intake");
         arm = hardwareMap.get(DcMotor.class, "arm");
         ClawServo = hardwareMap.get(Servo.class, "claw");
 
@@ -78,16 +79,13 @@ public class TeleopCode extends LinearOpMode {
 
                 //start intake code
                 if (gamepad2.left_bumper) {
-                    // move to 0 degrees.
-                    servo.setPosition(0);
+                    intake.setPower(0);
                 } else if (gamepad2.b) {
-                    // move to 90 degrees.
-                    servo.setPosition(0.5);
+                    intake.setPower(-1);
                 } else if (gamepad2.a) {
-                    // move to 180 degrees.
-                    servo.setPosition(1);
+                    intake.setPower(1);
                 }
-                telemetry.addData("Servo Position", servo.getPosition());
+                telemetry.addData("Servo Position", intake.getPower());
                 // telemetry.addData("Motor Power", CCOpModeServo.getPower());
                 telemetry.addData("Status", "Running");
                 telemetry.update();
