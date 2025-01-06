@@ -99,6 +99,7 @@ public class TeleopCode extends LinearOpMode {
                 } else if(gamepad2.right_bumper) {
                     arm.setPower(0); // Stop arm
                 }
+                arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 //end arm code
 
                 //start claw code
