@@ -46,103 +46,62 @@ public class CCAutoFinal2 extends LinearOpMode {
 
         while (opModeIsActive()) {
             //MOVE FORWARD FOR 3 SECONDS
-            while (runtime.seconds() < 3.0) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                forwards(.5);
-            }
-            runtime.reset();
-
-            while (runtime.seconds() < 1) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
+            while (runtime.seconds() < 2.0) {
                 turnLeft(.5);
             }
             runtime.reset();
-
-            while (runtime.seconds() < .5) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
+            while (runtime.seconds() < 2) {
+                turnLeft(.5);
+            }
+            runtime.reset();
+            while (runtime.seconds() < 3) {
                 forwards(.5);
             }
             runtime.reset();
-
             while (runtime.seconds() < 1) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                turnLeft (.5);
+                moveArm(-0.5);
+                moveClaw(1);
             }
             runtime.reset();
-            while (runtime.seconds() < 3.0) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                forwards(.5);
-            }
-            runtime.reset();
-            while (runtime.seconds() < 3.0) {
-                telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
+          /*  while (runtime.seconds() < 1.0) {
                 backward(.5);
             }
             runtime.reset();
-
             while (runtime.seconds() < 3.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
+                turnLeft(.5);
+            }
+            runtime.reset();
+            while (runtime.seconds() < 1.0) {
                 turnRight(0.5);
             }
             runtime.reset();
-
-            while (runtime.seconds() < 1.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                forwards(.5);
+            while (runtime.seconds() < 0.5) {
+                moveArm(0.5);
             }
             runtime.reset();
-            while (runtime.seconds() < 0.5) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                moveArm(0.5);
-                }
-            runtime.reset();
             while (runtime.seconds() < 1) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
                 moveForearm(0.5);
             }
             runtime.reset();
             while (runtime.seconds() < 2.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
                 takeSampleCRServo();
             }
             runtime.reset();
-            while (runtime.seconds() < 1.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                turnLeft(1);
+            while (runtime.seconds() < 2.0) {
+                backward(1);
             }
             runtime.reset();
-            while (runtime.seconds() < 2.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
-                forwards( 1);
+            while (runtime.seconds() < 1.0) {
+                turnLeft( 1);
             }
             while (runtime.seconds() < 2.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
                 moveArm(1);
             }
-
-            runtime.reset();
-
             runtime.reset();
             while (runtime.seconds() < 2.0) {
-                telemetry.addData("crservo", "Leg 1: %4.1f S Elapsed", runtime.seconds());
-                telemetry.update();
                 leaveSampleCRServo();
             }
-            runtime.reset();
+            runtime.reset();*/
         }
     }
 
@@ -153,8 +112,6 @@ public class CCAutoFinal2 extends LinearOpMode {
     public void leaveSampleCRServo() {
         intakeCRServo.setPower(-1);
     }
-
-
 
     public void moveClaw(double position)  {
         clawServo.setPosition(position);
@@ -173,13 +130,14 @@ public class CCAutoFinal2 extends LinearOpMode {
     }
 
     public void backward (double power) {
-        rightWheelsMotor.setPower(power);
-        leftWheelsMotor.setPower(-power);
+        leftWheelsMotor.setDirection((DcMotorSimple.Direction.REVERSE));
+//        rightWheelsMotor.setPower(power);
+//        leftWheelsMotor.setPower(-power);
     }
     public void forwards(double power) {
-       // leftWheelsMotor.setDirection((DcMotorSimple.Direction.FORWARD));
-        leftWheelsMotor.setPower(-power);
-        rightWheelsMotor.setPower(power);
+        leftWheelsMotor.setDirection((DcMotorSimple.Direction.FORWARD));
+//        leftWheelsMotor.setPower(-power);
+//        rightWheelsMotor.setPower(power);
     }
     public void turnLeft (double power) {
         leftWheelsMotor.setPower(-power);
