@@ -46,7 +46,7 @@ public class TeleopCode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-           //start wheel code
+            //start wheel code
             drive = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
 
@@ -67,6 +67,14 @@ public class TeleopCode extends LinearOpMode {
             rightDrive.setPower(right);
             //end wheel code
 
+            if (gamepad2.left_bumper) {
+                intake.setPower(0);
+            } else if (gamepad2.b) {
+                intake.setPower(-1);
+            } else if (gamepad2.a) {
+                intake.setPower(1);
+            }
+
             //start forearm code
             if (gamepad2.dpad_up) {
                 forearm.setPower(0.5); // Move arm up
@@ -75,16 +83,17 @@ public class TeleopCode extends LinearOpMode {
             } else if (gamepad2.dpad_left) {
                 forearm.setPower(0); // Stop arm
             }
-            //end forearm code
+            forearm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+             //end forearm code
+
+            if (gamepad1.y) {
+
+                FullStop(5000);
+            }
+
 
                 //start intake code
-                if (gamepad2.left_bumper) {
-                    intake.setPower(0);
-                } else if (gamepad2.b) {
-                    intake.setPower(-1);
-                } else if (gamepad2.a) {
-                    intake.setPower(1);
-                }
+
                 telemetry.addData("Servo Position", intake.getPower());
                 // telemetry.addData("Motor Power", CCOpModeServo.getPower());
                 telemetry.addData("Status", "Running");
@@ -120,4 +129,12 @@ public class TeleopCode extends LinearOpMode {
 
         }
     }
+    public void FullStop (long time) {
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+        arm.setPower(0);
+        forearm.setPower(0);
+        intake.setPower(0);
+    }
+
 }
