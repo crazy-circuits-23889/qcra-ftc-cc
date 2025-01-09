@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,8 +18,8 @@ public class CCAuto extends LinearOpMode {
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     boolean rampUp = true;
 
-    public Servo intakeServo = null;
-    public Servo clawServo = null;
+    public CRServo intake = null;
+    public Servo claw = null;
     public DcMotor leftWheelsMotor = null;
     public DcMotor rightWheelsMotor = null;
     public DcMotor armMotor = null;
@@ -26,8 +27,8 @@ public class CCAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        intakeServo = hardwareMap.get(Servo.class, "intake");
-        clawServo = hardwareMap.get(Servo.class, "claw");
+        intake = hardwareMap.get(CRServo.class, "intake1");
+        claw = hardwareMap.get(Servo.class, "claw");
         leftWheelsMotor = hardwareMap.get(DcMotor.class, "leftwheels");
         rightWheelsMotor = hardwareMap.get(DcMotor.class, "rightwheels");
         armMotor = hardwareMap.get(DcMotor.class,"arm");
@@ -49,9 +50,9 @@ public class CCAuto extends LinearOpMode {
             sleep(1000);
             moveArm(0.5); // move arm up
             sleep(1000);
-            moveArm(0); // stop earm
+            moveArm(0); // stop arm
             sleep(1000);
-            moveArm(-0.5); // move earm down
+            moveArm(-0.5); // move arm down
             sleep(1000);
             moveForearm(0.5); // move forearm up
             sleep(1000);
@@ -75,7 +76,7 @@ public class CCAuto extends LinearOpMode {
 
     public void takeSample() {
         telemetry.addData("takesample",rampUp);
-        telemetry.addData("takesample",intakeServo.getPosition());
+        telemetry.addData("takesample", intake.getPower());
         telemetry.update();
         if (rampUp) {
             // Keep stepping up until we hit the max value.
@@ -86,17 +87,17 @@ public class CCAuto extends LinearOpMode {
             }
         }
 
-        intakeServo.setPosition(position);
+        intake.setPower(position);
         sleep(CYCLE_MS);
         idle();
-        telemetry.addData("takesample",intakeServo.getPosition());
+        telemetry.addData("takesample", intake.getPower());
         telemetry.addData("takesample",rampUp);
         telemetry.update();
     }
 
     public void leaveSample()  {
         telemetry.addData("leavesample",rampUp);
-        telemetry.addData("leavesample",intakeServo.getPosition());
+        telemetry.addData("leavesample", intake.getPower());
         telemetry.update();
         if (!rampUp) {
             // Keep stepping up until we hit the max value.
@@ -107,16 +108,16 @@ public class CCAuto extends LinearOpMode {
             }
         }
 
-        intakeServo.setPosition(position);
+        intake.setPower(position);
         sleep(CYCLE_MS);
         idle();
         telemetry.addData("takesample",rampUp);
-        telemetry.addData("leavesample",intakeServo.getPosition());
+        telemetry.addData("leavesample", intake.getPower());
         telemetry.update();
     }
 
     public void moveClaw(double position)  {
-        clawServo.setPosition(position);
+        claw.setPosition(position);
     }
 
     public void moveArm(double power)  {
