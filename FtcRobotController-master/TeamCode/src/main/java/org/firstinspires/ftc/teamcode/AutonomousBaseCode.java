@@ -65,7 +65,6 @@ import com.qualcomm.robotcore.hardware.Servo;
     }
 
     public void openClaw() {
-
         //I am testing so once we remove he comment slashes add the double position into the parinthesis of the line above.
 
       //  claw.setPosition(-position);

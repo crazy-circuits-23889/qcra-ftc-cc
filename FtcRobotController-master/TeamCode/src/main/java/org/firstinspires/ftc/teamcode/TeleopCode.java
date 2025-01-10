@@ -46,34 +46,32 @@ public class TeleopCode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-           //start wheel code
-            drive = -gamepad1.left_stick_y;
-            turn = gamepad1.right_stick_x;
+            drive = -gamepad1.left_stick_y/1.5;
+            turn  =  gamepad1.right_stick_x/1.5;
 
-            // Combine drive and turn for blended motion.
-            left = drive + turn;
+            left  = drive + turn;
             right = drive - turn;
 
-            // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0) {
+            if (max > 1.0)
+            {
                 left /= max;
                 right /= max;
             }
 
-
             // Output the safe vales to the motor drives.
             leftDrive.setPower(left);
             rightDrive.setPower(right);
-            //end wheel code
 
             //start forearm code
             if (gamepad2.dpad_up) {
-                forearm.setPower(0.5); // Move arm up
+                forearm.setPower(.25); // Move arm up
             } else if (gamepad2.dpad_down) {
-                forearm.setPower(-0.5); // Move arm down
+                forearm.setPower(-.25); // Move arm down
             } else if (gamepad2.dpad_left) {
                 forearm.setPower(0); // Stop arm
+            } else {
+                forearm.setPower(0);
             }
             //end forearm code
 
@@ -81,9 +79,11 @@ public class TeleopCode extends LinearOpMode {
                 if (gamepad2.left_bumper) {
                     intake.setPower(0);
                 } else if (gamepad2.b) {
-                    intake.setPower(-1);
+                    intake.setPower(-2);
                 } else if (gamepad2.a) {
-                    intake.setPower(1);
+                    intake.setPower(2);
+                } else {
+                    intake.setPower(0);
                 }
                 telemetry.addData("Servo Position", intake.getPower());
                 // telemetry.addData("Motor Power", CCOpModeServo.getPower());
@@ -93,13 +93,16 @@ public class TeleopCode extends LinearOpMode {
 
                 //start arm code
                 if (gamepad2.right_trigger == 1) {
-                    arm.setPower(0.5); // Move arm up
+                    arm.setPower(.25); // Move arm up
                 } else if (gamepad2.left_trigger == 1) {
-                    arm.setPower(-0.5); // Move arm down
+                    arm.setPower(-.25); // Move arm down
                 } else if(gamepad2.right_bumper) {
                     arm.setPower(0); // Stop arm
+                } else {
+                    arm.setPower(0);
                 }
                 arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                arm.setPower(0);
                 //end arm code
 
                 //start claw code
