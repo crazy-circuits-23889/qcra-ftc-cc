@@ -12,11 +12,6 @@ public class WheelsTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        double left;
-        double right;
-        double drive;
-        double turn;
-        double max;
 
         // Define and Initialize Motors
         leftDrive  = hardwareMap.get(DcMotor.class, "leftwheels");
@@ -41,27 +36,12 @@ public class WheelsTeleOp extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            // This way it's also easy to just drive straight, or just turn.
-            drive = -gamepad1.left_stick_y;
-            turn  =  gamepad1.right_stick_x;
-
-            // Combine drive and turn for blended motion.
-            left  = drive + turn;
-            right = drive - turn;
-
-            // Normalize the values so neither exceed +/- 1.0
-            max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
-                left /= max;
-                right /= max;
+           if (gamepad1.left_stick_y > 0) {
+               leftDrive.setPower(1);
+           }
+            if (gamepad1.left_stick_y < 0) {
+                leftDrive.setPower(1);
             }
-
-            // Output the safe vales to the motor drives.
-            leftDrive.setPower(left);
-            rightDrive.setPower(right);
         }
     }
 }
