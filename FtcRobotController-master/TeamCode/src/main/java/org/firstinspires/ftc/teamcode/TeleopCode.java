@@ -75,37 +75,37 @@ public class TeleopCode extends LinearOpMode {
             }
             //end forearm code
 
-                //start intake code
-                if (gamepad2.left_bumper) {
-                    intake.setPower(0);
-                } else if (gamepad2.b) {
-                    intake.setPower(-2);
-                } else if (gamepad2.a) {
-                    intake.setPower(2);
-                } else {
-                    intake.setPower(0);
-                }
-                telemetry.addData("Servo Position", intake.getPower());
-                // telemetry.addData("Motor Power", CCOpModeServo.getPower());
-                telemetry.addData("Status", "Running");
-                telemetry.update();
-                //end intake code
+            //start intake code
+            if (gamepad2.left_bumper) {
+                intake.setPower(0);
+            } else if (gamepad2.b) {
+                intake.setPower(-2);
+            } else if (gamepad2.a) {
+                intake.setPower(2);
+            } else {
+                intake.setPower(0);
+            }
+            telemetry.addData("Servo Position", intake.getPower());
+            // telemetry.addData("Motor Power", CCOpModeServo.getPower());
+            telemetry.addData("Status", "Running");
+            telemetry.update();
+            //end intake code
 
-                //start arm code
-                if (gamepad2.right_trigger == 1) {
-                    arm.setPower(.25); // Move arm up
-                } else if (gamepad2.left_trigger == 1) {
-                    arm.setPower(-.25); // Move arm down
-                } else if(gamepad2.right_bumper) {
-                    arm.setPower(0); // Stop arm
-                } else {
-                    arm.setPower(0);
-                }
-                arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //start arm code
+            if (gamepad2.right_trigger == 1) {
+                arm.setPower(.25); // Move arm up
+            } else if (gamepad2.left_trigger == 1) {
+                arm.setPower(-.25); // Move arm down
+            } else if(gamepad2.right_bumper) {
+                arm.setPower(0); // Stop arm
+            } else {
                 arm.setPower(0);
-                //end arm code
+            }
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            arm.setPower(0);
+            //end arm code
 
-                //start claw code
+            //start claw code
             if(gamepad2.dpad_right) {
                 // move to 0 degrees.
                 ClawServo.setPosition(0);
