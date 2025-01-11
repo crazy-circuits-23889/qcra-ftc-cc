@@ -14,6 +14,7 @@ public class CCAuto extends LinearOpMode {
     static final double MIN_POS     =  0.0;     // Minimum rotational position
 
     // Define class members
+    // Test checkin from main on gitbash
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     boolean rampUp = true;
 
