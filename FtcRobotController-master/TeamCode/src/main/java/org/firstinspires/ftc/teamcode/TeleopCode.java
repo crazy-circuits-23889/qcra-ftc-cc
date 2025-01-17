@@ -65,9 +65,9 @@ public class TeleopCode extends LinearOpMode {
 
             //start forearm code
             if (gamepad2.dpad_up) {
-                forearm.setPower(.25); // Move arm up
+                forearm.setPower(.35); // Move arm up
             } else if (gamepad2.dpad_down) {
-                forearm.setPower(-.25); // Move arm down
+                forearm.setPower(-.35); // Move arm down
             } else if (gamepad2.dpad_left) {
                 forearm.setPower(0); // Stop arm
             } else {
@@ -92,9 +92,9 @@ public class TeleopCode extends LinearOpMode {
             //end intake code
 
             //start arm code
-            if (gamepad2.right_trigger == 1) {
+            if (gamepad2.right_trigger > 0) {
                 arm.setPower(.25); // Move arm up
-            } else if (gamepad2.left_trigger == 1) {
+            } else if (gamepad2.left_trigger > 0) {
                 arm.setPower(-.25); // Move arm down
             } else if(gamepad2.right_bumper) {
                 arm.setPower(0); // Stop arm
