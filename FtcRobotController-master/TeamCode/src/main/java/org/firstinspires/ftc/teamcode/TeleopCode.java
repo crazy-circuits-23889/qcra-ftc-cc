@@ -15,6 +15,17 @@ public class TeleopCode extends LinearOpMode {
     public DcMotor arm = null;
     public Servo ClawServo = null;
 
+    // Speed variables
+    double slowSpeed = 0.8;  // Slow speed factor like as in math factors
+    double fastSpeed = 1.2;  // Fast speed factor like as in math factors
+    double currentSpeed = slowSpeed; // Start at slow speed
+    double armFast = -.7;
+    double armSlow = .45;
+    double armSpeed = armSlow;
+    double stopSlow = 0;
+    double stopFast = -.7;
+    double stopCurrent = stopSlow;
+
     @Override
     public void runOpMode() {
         double left;
@@ -31,14 +42,13 @@ public class TeleopCode extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         ClawServo = hardwareMap.get(Servo.class, "claw");
 
-
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         forearm.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData(">", "Robot Ready.  Press START.");    //
+        telemetry.addData(">", "Robot Ready.  Press START.");
         telemetry.update();
 
         // Wait for the game to start (driver presses START)
@@ -46,81 +56,96 @@ public class TeleopCode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            drive = -gamepad1.left_stick_y/1.5;
-            turn  =  gamepad1.right_stick_x/1.5;
+            if (gamepad1.left_trigger > 0) {
+                currentSpeed = slowSpeed;  // Set to slow mode
+                telemetry.addData("Speed Mode", "Slow");
+            } else if (gamepad1.right_trigger > 0) {
+                currentSpeed = fastSpeed;  // Set to fast mode
+                telemetry.addData("Speed Mode", "Fast");
+            }
 
-            left  = drive + turn;
+            drive = -gamepad1.left_stick_y;
+            turn = gamepad1.right_stick_x;
+
+            left = drive + turn;
             right = drive - turn;
 
+            // Apply current speed setting
+            left *= currentSpeed;
+            right *= currentSpeed;
+
+            // Ensure values do not exceed -1 to 1 range
             max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
+            if (max > 1.0) {
                 left /= max;
                 right /= max;
             }
 
-            // Output the safe vales to the motor drives.
+            // Set motor powers
             leftDrive.setPower(left);
             rightDrive.setPower(right);
 
-            //start forearm code
+            // Start forearm code
             if (gamepad2.dpad_up) {
-                forearm.setPower(.35); // Move arm up
+                forearm.setPower(0.35); // Move arm up
             } else if (gamepad2.dpad_down) {
-                forearm.setPower(-.35); // Move arm down
-            } else if (gamepad2.dpad_left) {
-                forearm.setPower(0); // Stop arm
+                forearm.setPower(-0.35); // Move arm down
             } else {
-                forearm.setPower(0);
+                forearm.setPower(0); // Stop arm
             }
-            //end forearm code
 
-            //start intake code
-            if (gamepad2.left_bumper) {
-                intake.setPower(0);
-            } else if (gamepad2.b) {
+            // Start intake code
+
+            if (gamepad2.b) {
                 intake.setPower(-2);
             } else if (gamepad2.a) {
                 intake.setPower(2);
             } else {
                 intake.setPower(0);
             }
+
             telemetry.addData("Servo Position", intake.getPower());
-            // telemetry.addData("Motor Power", CCOpModeServo.getPower());
             telemetry.addData("Status", "Running");
             telemetry.update();
-            //end intake code
 
-            //start arm code
+            // Start arm code
             if (gamepad2.right_trigger > 0) {
-                arm.setPower(.25); // Move arm up
+                arm.setPower(armSpeed); // Move arm up
+            } else if (gamepad2.right_trigger == 1) {
+                arm.setPower(armSpeed);
             } else if (gamepad2.left_trigger > 0) {
-                arm.setPower(-.25); // Move arm down
-            } else if(gamepad2.right_bumper) {
-                arm.setPower(0); // Stop arm
-            } else {
+                arm.setPower(-armSpeed); // Move arm down
+            } else if (gamepad2.left_trigger == 1) {
+                arm.setPower(-armSpeed);
+            } else if (gamepad2.right_bumper) {
                 arm.setPower(0);
+                armSpeed = armFast;
+                stopCurrent = stopFast;
+            } else if (gamepad2.left_bumper) {
+                arm.setPower(0);
+                armSpeed = armSlow;
+                stopCurrent = stopSlow;
+            } else {
+                arm.setPower(stopCurrent); // Stop arm
             }
-            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            arm.setPower(0);
-            //end arm code
 
-            //start claw code
-            if(gamepad2.dpad_right) {
-                // move to 0 degrees.
-                ClawServo.setPosition(0);
+
+
+
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            // Start claw code
+            if (gamepad2.dpad_right) {
+                ClawServo.setPosition(0); // move to 0 degrees
             } else if (gamepad2.y) {
-                // move to 45 degrees.
-                ClawServo.setPosition(0.25);
+                ClawServo.setPosition(0.25); // move to 45 degrees
             } else if (gamepad2.x) {
-                // move to 180 degrees.
-                ClawServo.setPosition(1);
+                ClawServo.setPosition(1); // move to 180 degrees
             }
+
             telemetry.addData("Servo Position", ClawServo.getPosition());
             telemetry.addData("Status", "Running");
             telemetry.update();
-
-
         }
     }
 }
