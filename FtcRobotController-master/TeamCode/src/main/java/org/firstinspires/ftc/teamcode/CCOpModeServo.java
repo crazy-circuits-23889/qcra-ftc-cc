@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 @TeleOp
 public class CCOpModeServo extends LinearOpMode {
@@ -37,7 +37,7 @@ public class CCOpModeServo extends LinearOpMode {
 
                     servo.setPower(1);
                 }
-                telemetry.addData("Servo Position", servo.getPosition());
+                telemetry.addData("Servo Position", servo.getPower());
                 telemetry.addData("Target Power", tgtPower);
                // telemetry.addData("Motor Power", CCOpModeServo.getPower());
                 telemetry.addData("Status", "Running");
