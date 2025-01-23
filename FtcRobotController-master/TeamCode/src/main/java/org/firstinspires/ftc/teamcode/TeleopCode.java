@@ -17,6 +17,17 @@ public class TeleopCode extends LinearOpMode {
     public DcMotor arm = null;
     public ServoImplEx ClawServo = null;
 
+    // Speed variables
+    double slowSpeed = 0.8;  // Slow speed factor like as in math factors
+    double fastSpeed = 1.2;  // Fast speed factor like as in math factors
+    double currentSpeed = slowSpeed; // Start at slow speed
+    double armFast = -.7;
+    double armSlow = .45;
+    double armSpeed = armSlow;
+    double stopSlow = 0;
+    double stopFast = -.7;
+    double stopCurrent = stopSlow;
+
     @Override
     public void runOpMode() {
         double left;
@@ -33,8 +44,7 @@ public class TeleopCode extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         ClawServo = hardwareMap.get(ServoImplEx.class, "claw");
         ClawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        ClawServo.scaleRange(0.9, 1);
-
+        ClawServo.scaleRange(0.8, 1);
 
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -42,69 +52,67 @@ public class TeleopCode extends LinearOpMode {
         arm.setDirection(DcMotor.Direction.FORWARD);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData(">", "Robot Ready.  Press START.");    //
-        telemetry.update();
+        telemetry.addData(">", "Robot Ready.  Press START.");
+        //telemetry.update();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            //start wheel code
+            if (gamepad1.left_trigger > 0) {
+                currentSpeed = slowSpeed;  // Set to slow mode
+                telemetry.addData("Speed Mode", "Slow");
+            } else if (gamepad1.right_trigger > 0) {
+                currentSpeed = fastSpeed;  // Set to fast mode
+                telemetry.addData("Speed Mode", "Fast");
+            }
+
             drive = -gamepad1.left_stick_y;
             turn = gamepad1.right_stick_x;
 
-            // Combine drive and turn for blended motion.
             left = drive + turn;
             right = drive - turn;
 
-            // Normalize the values so neither exceed +/- 1.0
+            // Apply current speed setting
+            left *= currentSpeed;
+            right *= currentSpeed;
+
+            // Ensure values do not exceed -1 to 1 range
             max = Math.max(Math.abs(left), Math.abs(right));
             if (max > 1.0) {
                 left /= max;
                 right /= max;
             }
 
-
-            // Output the safe vales to the motor drives.
+            // Set motor powers
             leftDrive.setPower(left);
             rightDrive.setPower(right);
-            //end wheel code
 
-            if (gamepad2.left_bumper) {
-                intake.setPower(0);
-            } else if (gamepad2.b) {
-                intake.setPower(-1);
-            } else if (gamepad2.a) {
-                intake.setPower(1);
-            }
-
-            //start forearm code
+            // Start forearm code
             if (gamepad2.dpad_up) {
-                forearm.setPower(0.5); // Move arm up
+                forearm.setPower(0.35); // Move arm up
             } else if (gamepad2.dpad_down) {
-                forearm.setPower(-0.5); // Move arm down
-            } else if (gamepad2.dpad_left) {
+                forearm.setPower(-0.35); // Move arm down
+            } else {
                 forearm.setPower(0); // Stop arm
             }
-            forearm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            telemetry.addData("forearm position", forearm.getCurrentPosition());
-            //end forearm code
 
-            if (gamepad1.y) {
+            // Start intake code
 
-                FullStop(5000);
+            if (gamepad2.b) {
+                intake.setPower(-2);
+            } else if (gamepad2.a) {
+                intake.setPower(2);
+            } else {
+                intake.setPower(0);
             }
 
-
-            //start intake code
-
             telemetry.addData("Servo Position", intake.getPower());
-            // telemetry.addData("Motor Power", CCOpModeServo.getPower());
             telemetry.addData("Status", "Running");
-            //end intake code
+            // telemetry.update();
 
-            //start arm code
+            // Start arm code
             if (gamepad2.right_trigger == 1) {
                 arm.setPower(0.5); // Move arm up
             } else if (gamepad2.left_trigger == 1) {
@@ -120,32 +128,26 @@ public class TeleopCode extends LinearOpMode {
             arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             telemetry.addData("arm position", arm.getCurrentPosition());
-                //end arm code
 
-                //start claw code
+
+
+
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            //start claw code
             if(gamepad2.dpad_right) {
                 // move to 0 degrees.
                 //ClawServo.setPosition(0);
             } else if (gamepad2.y) {
                 // move to 45 degrees.
-                ClawServo.setPosition(1);
+                ClawServo.setPosition(0);
             } else if (gamepad2.x) {
                 // move to 180 degrees.
-                ClawServo.setPosition(0);
+                ClawServo.setPosition(1);
             }
             telemetry.addData("claw Position", ClawServo.getPosition());
             telemetry.addData("Status", "Running");
             telemetry.update();
-
-
         }
     }
-    public void FullStop (long time) {
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        arm.setPower(0);
-        forearm.setPower(0);
-        intake.setPower(0);
-    }
-
 }
