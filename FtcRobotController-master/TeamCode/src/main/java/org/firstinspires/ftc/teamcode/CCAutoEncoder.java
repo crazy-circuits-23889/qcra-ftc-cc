@@ -147,6 +147,9 @@ public class CCAutoEncoder extends LinearOpMode {
            encoderDrive(DRIVE_SPEED,  4,  4, 2.0); // move forward by 1 inches
            encoderDrive(TURN_SPEED, -7.5, 7.5, 2.0);
            encoderDrive(DRIVE_SPEED, 32, 32, 2.0);
+           encoderDriveForArm(ARMSPEED,83,2 );
+           encoderDrive(TURN_SPEED, 7.5, -7.5, 2);
+           encoderDrive(DRIVE_SPEED, 6, 6, 2);
            runtime.reset();
 
            //  encoderDrive(DRIVE_SPEED,  -4,  -4 , 2.0); // move backward by 4 inches//encoderDrive(DRIVE_SPEED,  2,  2 , 2.0); // move forward by 27 inches
