@@ -9,16 +9,12 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @TeleOp
 public class mecanumWheelsTest1 extends LinearOpMode {
-    public CRServo intake = null;
     public DcMotor leftFrontDrive = null;
     public DcMotor leftBackDrive = null;
 
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
 
-    public DcMotor forearm = null;
-    public DcMotor arm = null;
-    public ServoImplEx ClawServo = null;
 
     // Speed variables
     double normalMode;
@@ -40,21 +36,11 @@ public class mecanumWheelsTest1 extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftbackwheels");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightfrontwheels");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightbackwheels");
-        forearm = hardwareMap.get(DcMotor.class, "forearm");
-        intake = hardwareMap.get(CRServo.class, "intake1");
-        arm = hardwareMap.get(DcMotor.class, "arm");
-        ClawServo = hardwareMap.get(ServoImplEx.class, "claw");
-        ClawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        ClawServo.scaleRange(0.8, 1);
-
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        forearm.setDirection(DcMotor.Direction.FORWARD);
-        arm.setDirection(DcMotor.Direction.FORWARD);
-
-        // Send telemetry message to signify robot waiting;
+              // Send telemetry message to signify robot waiting;
         telemetry.addData(">", "Robot Ready.  Press START.");
         //telemetry.update();
 
@@ -103,67 +89,4 @@ public class mecanumWheelsTest1 extends LinearOpMode {
                 leftFrontDrive.setPower(pivot + (-vertical - horizontal));
                 leftFrontDrive.setPower(pivot + (-vertical + horizontal));
 
-            }
-
-            // Start forearm code
-            if (gamepad2.dpad_up) {
-                forearm.setPower(0.35); // Move arm up
-            } else if (gamepad2.dpad_down) {
-                forearm.setPower(-0.35); // Move arm down
-            } else {
-                forearm.setPower(0); // Stop arm
-            }
-
-            // Start intake code
-
-            if (gamepad2.b) {
-                intake.setPower(-2);
-            } else if (gamepad2.a) {
-                intake.setPower(2);
-            } else {
-                intake.setPower(0);
-            }
-
-            telemetry.addData("Servo Position", intake.getPower());
-            telemetry.addData("Status", "Running");
-            // telemetry.update();
-
-            // Start arm code
-            if (gamepad2.right_trigger == 1) {
-                arm.setPower(0.5); // Move arm up
-            } else if (gamepad2.left_trigger == 1) {
-                arm.setPower(-0.5); // Move arm down
-            } else if (gamepad2.right_bumper) {
-                arm.setPower(0); // Stop arm
-            }
-            if (arm.getCurrentPosition()>2815) {
-                arm.setPower(0);
-                arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            }
-
-            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-            telemetry.addData("arm position", arm.getCurrentPosition());
-
-
-
-
-            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-            //start claw code
-            if(gamepad2.dpad_right) {
-                // move to 0 degrees.
-                //ClawServo.setPosition(0);
-            } else if (gamepad2.y) {
-                // move to 45 degrees.
-                ClawServo.setPosition(0);
-            } else if (gamepad2.x) {
-                // move to 180 degrees.
-                ClawServo.setPosition(1);
-            }
-            telemetry.addData("claw Position", ClawServo.getPosition());
-            telemetry.addData("Status", "Running");
-            telemetry.update();
-        }
-    }
-}
+            }}}}
