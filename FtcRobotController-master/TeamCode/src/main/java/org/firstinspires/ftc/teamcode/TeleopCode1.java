@@ -5,11 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @TeleOp
-public class TeleopCode extends LinearOpMode {
+public class TeleopCode1 extends LinearOpMode {
     public CRServo intake = null;
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
@@ -44,7 +43,8 @@ public class TeleopCode extends LinearOpMode {
         arm = hardwareMap.get(DcMotor.class, "arm");
         ClawServo = hardwareMap.get(ServoImplEx.class, "claw");
         ClawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        ClawServo.scaleRange(0.8, 1);
+        ClawServo.scaleRange(0.2, 1);
+
 
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -90,13 +90,14 @@ public class TeleopCode extends LinearOpMode {
             rightDrive.setPower(right);
 
             // Start forearm code
-            if (gamepad2.dpad_up) {
-                forearm.setPower(0.35); // Move arm up
+            if (gamepad2.dpad_up) {                            //swap up for down i think
+                forearm.setPower(0.25); // Move arm up
             } else if (gamepad2.dpad_down) {
-                forearm.setPower(-0.35); // Move arm down
+                forearm.setPower(-3.5); // Move arm down
             } else {
                 forearm.setPower(0); // Stop arm
             }
+            forearm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             // Start intake code
 

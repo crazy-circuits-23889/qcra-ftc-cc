@@ -73,7 +73,7 @@ public class CCAutoRightEncoder extends LinearOpMode {
         armMotor = hardwareMap.get(DcMotor.class, "arm");
         clawServo = hardwareMap.get(ServoImplEx.class, "claw");
         clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
-        clawServo.scaleRange(0.9, 1);
+        clawServo.scaleRange(0, 1);
         forearmMotor = hardwareMap.get(DcMotor.class, "forearm");
         intakeServo = hardwareMap.get(CRServo.class, "intake1");
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -111,7 +111,7 @@ public class CCAutoRightEncoder extends LinearOpMode {
             encoderDrive(DRIVE_SPEED, 5, 5, 2.0);  //  //move forward for 5 inches
             encoderDrive(TURN_SPEED,   7.5, -7.5, 2.0); // move left to 90 degrees to straighten
             encoderDrive(DRIVE_SPEED, 5, 4.2, 2.0); // move forward toward the rung
-            encoderDriveForArm(ARMSPEED, 2000, 2); // moving the arm down to 1682
+            encoderDriveForArm(ARMSPEED, 1900, 2); // moving the arm down to 1682
             openclaw(); // open the claw to move from the specimen
             encoderDrive(DRIVE_SPEED,  -6,  -6 , 2.0); // move backward by 6 inches
             encoderDrive(TURN_SPEED,  7.5,  -7.5 , 2.0); // move left by 90 degrees
@@ -121,7 +121,7 @@ public class CCAutoRightEncoder extends LinearOpMode {
             encoderDrive(TURN_SPEED,  7.5,  -7.5 , 2.0); // move left 90 degrees
             encoderDrive(DRIVE_SPEED,  4,  4, 2.0); // move forward by 1 inches
             encoderDrive(TURN_SPEED, 7.5, -7.5, 2.0);
-            encoderDrive(DRIVE_SPEED, 32, 32, 2.0);
+            encoderDrive(DRIVE_SPEED, 30, 30, 2.0);
 
 
 
