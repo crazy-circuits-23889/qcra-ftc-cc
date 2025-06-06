@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+// This program will have the code for mecanum wheels and also sensors
 
 @TeleOp
 public class TeleopCodeMecanumSensor extends LinearOpMode {
