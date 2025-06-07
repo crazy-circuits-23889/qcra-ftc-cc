@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
  * The code is structured as a LinearOpMode
@@ -67,13 +69,16 @@ import com.qualcomm.robotcore.hardware.CRServo;
 public class CCAutoEncoder extends LinearOpMode {
 
     /* Declare OpMode members. */
-    public DcMotor leftWheelsMotor = null;
-    public DcMotor rightWheelsMotor = null;
+    public DcMotor fL = null;
+    public DcMotor fR = null;
+    public DcMotor bR = null;
+    public DcMotor bL = null;
     public DcMotor armMotor = null;
     public ServoImplEx clawServo = null;
     public DcMotor forearmMotor = null;
     public CRServo intakeServo = null;
     private ElapsedTime  runtime = new ElapsedTime();
+    private ColorSensor colorSensor;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -85,7 +90,7 @@ public class CCAutoEncoder extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 30.24 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 3.543 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     static final double ARMSPEED    = 0.75;
@@ -94,8 +99,11 @@ public class CCAutoEncoder extends LinearOpMode {
     @Override
     public void runOpMode() {
         // Initialize the drive system variables.
-        leftWheelsMotor = hardwareMap.get(DcMotor.class, "leftwheels");
-        rightWheelsMotor = hardwareMap.get(DcMotor.class, "rightwheels");
+        fL = hardwareMap.get(DcMotor.class, "fL");
+        fR = hardwareMap.get(DcMotor.class, "fR");
+        bL = hardwareMap.get(DcMotor.class, "bL");
+        bR = hardwareMap.get(DcMotor.class, "bR");
+        colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
         armMotor = hardwareMap.get(DcMotor.class, "arm");
         clawServo = hardwareMap.get(ServoImplEx.class, "claw");
         clawServo.setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -105,58 +113,86 @@ public class CCAutoEncoder extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        leftWheelsMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightWheelsMotor.setDirection(DcMotor.Direction.REVERSE);
+        fL.setDirection(DcMotor.Direction.FORWARD);
+        fR.setDirection(DcMotor.Direction.REVERSE);
+        bL.setDirection(DcMotor.Direction.FORWARD);
+        bR.setDirection(DcMotor.Direction.REVERSE);
 
-        leftWheelsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightWheelsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         forearmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftWheelsMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightWheelsMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         forearmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
-                          leftWheelsMotor.getCurrentPosition(),
-                          rightWheelsMotor.getCurrentPosition());
-                            armMotor.getCurrentPosition();
+               // leftWheelsMotor.getCurrentPosition(),
+                // rightWheelsMotor.getCurrentPosition());
+        armMotor.getCurrentPosition();
         telemetry.update();
 
-       // Wait for the game to start (driver presses START)
+        // Wait for the game to start (driver presses START)
         waitForStart();
-       if (opModeIsActive()){
-           closeclaw();
-           encoderDriveForArm(ARMSPEED, 2815, 2); //moving the arm up to 2815
-// Step through each leg of the path,
-           // Note: Reverse movement is obtained by setting a negative distance (not speed)
-           encoderDrive(DRIVE_SPEED,  12.3,  12.3 , 2.0);  // move forward for 12 inches
-           encoderDrive(TURN_SPEED,   7.5, -7.5, 2.0);  //move right to 7.5 inches - 90 degrees
-           encoderDrive(DRIVE_SPEED, 5, 5, 2.0);  //  //move forward for 5 inches
-           encoderDrive(TURN_SPEED,   -7.5, 7.5, 2.0); // move left to 90 degrees to straighten
-           encoderDrive(DRIVE_SPEED, 5, 4.2, 2.0); // move forward toward the rung
-           encoderDriveForArm(ARMSPEED, 1900, 2); // moving the arm down to 1682
-           openclaw(); // open the claw to move from the specimen
-           encoderDrive(DRIVE_SPEED,  -6,  -6 , 2.0); // move backward by 6 inches
-           encoderDrive(TURN_SPEED,  -7.5,  7.5 , 2.0); // move left by 90 degrees
-           encoderDrive(DRIVE_SPEED,  19 ,  19 , 2.0); // move forward by 17 inches
-           encoderDrive(TURN_SPEED,  7.5,  -7.5 , 2.0);// move right by 90 degrees
-           encoderDrive(DRIVE_SPEED,  18.5,  18.5, 2.0); // move forward by 10.5 inches
-           encoderDrive(TURN_SPEED,  -7.5,  7.5 , 2.0); // move left 90 degrees
-           encoderDrive(DRIVE_SPEED,  4,  4, 2.0); // move forward by 1 inches
-           encoderDrive(TURN_SPEED, -7.5, 7.5, 2.0);
-           encoderDrive(DRIVE_SPEED, 32, 32, 2.0);
-           runtime.reset();
+        if (opModeIsActive()){
+            int red = colorSensor.red();
+            int green = colorSensor.green();
+            int blue = colorSensor.blue();
 
-           //  encoderDrive(DRIVE_SPEED,  -4,  -4 , 2.0); // move backward by 4 inches//encoderDrive(DRIVE_SPEED,  2,  2 , 2.0); // move forward by 27 inches
-          // encoderDriveForArm(ARMSPEED, 0, 2); // moving the arm down to 0
-           //encoderDriveForForeArm(FOREARMSPEED, 100, 2); // move forearm down to fetch
-          //while (runtime.seconds() < 2) {
+
+            //telemetry.addData("White", white);
+            //telemetry.update();
+
+            //if white is detected
+            if (red > 189 && green > 189 && blue > 189) {
+                telemetry.addLine("White Detected- Stopping");
+                lfMotor.setPower(0);
+                rfMotor.setPower(0);
+                rbMotor.setPower(0);
+                lbMotor.setPower(0);
+                sleep (1000);
+                continue
+                break;
+                //code: how to go around and also code auto
+            }
+
+            closeclaw();
+            encoderDriveForArm(ARMSPEED, 2815, 2); //moving the arm up to 2815
+// Step through each leg of the path,
+            // Note: Reverse movement is obtained by setting a negative distance (not speed)
+            encoderDrive(DRIVE_SPEED,  12.3,  12.3 , 2.0);  // move forward for 12 inches
+            encoderDrive(TURN_SPEED,   7.5, -7.5, 2.0);  //move right to 7.5 inches - 90 degrees
+            encoderDrive(DRIVE_SPEED, 5, 5, 2.0);  //  //move forward for 5 inches
+            encoderDrive(TURN_SPEED,   -7.5, 7.5, 2.0); // move left to 90 degrees to straighten
+            encoderDrive(DRIVE_SPEED, 5, 4.2, 2.0); // move forward toward the rung
+            encoderDriveForArm(ARMSPEED, 1900, 2); // moving the arm down to 1682
+            openclaw(); // open the claw to move from the specimen
+            encoderDrive(DRIVE_SPEED,  -6,  -6 , 2.0); // move backward by 6 inches
+            encoderDrive(TURN_SPEED,  -7.5,  7.5 , 2.0); // move left by 90 degrees
+            encoderDrive(DRIVE_SPEED,  19 ,  19 , 2.0); // move forward by 17 inches
+            encoderDrive(TURN_SPEED,  7.5,  -7.5 , 2.0);// move right by 90 degrees
+            encoderDrive(DRIVE_SPEED,  18.5,  18.5, 2.0); // move forward by 10.5 inches
+            encoderDrive(TURN_SPEED,  -7.5,  7.5 , 2.0); // move left 90 degrees
+            encoderDrive(DRIVE_SPEED,  4,  4, 2.0); // move forward by 1 inches
+            encoderDrive(TURN_SPEED, -7.5, 7.5, 2.0);
+            encoderDrive(DRIVE_SPEED, 32, 32, 2.0);
+            runtime.reset();
+
+            //  encoderDrive(DRIVE_SPEED,  -4,  -4 , 2.0); // move backward by 4 inches//encoderDrive(DRIVE_SPEED,  2,  2 , 2.0); // move forward by 27 inches
+            // encoderDriveForArm(ARMSPEED, 0, 2); // moving the arm down to 0
+            //encoderDriveForForeArm(FOREARMSPEED, 100, 2); // move forearm down to fetch
+            //while (runtime.seconds() < 2) {
 //               intakeServo.setPower(1); //take the specimen
 //           }
-        //   encoderDriveForForeArm(FOREARMSPEED, 0, 2); // move forearm down to fetch
+            //   encoderDriveForForeArm(FOREARMSPEED, 0, 2); // move forearm down to fetch
 //           encoderDriveForForearm(FOREARMSPEED, 1500, 2); //move forearm up to original position
 //           encoderDrive(TURN_SPEED,   5, -5, 2.0); //turn right to reach the basket
 //           encoderDriveForArm(ARMSPEED, 1682, 2); // extend the arm up to put in basket
@@ -168,23 +204,23 @@ public class CCAutoEncoder extends LinearOpMode {
 //           encoderDriveForForearm(FOREARMSPEED, 126, 2); //move forearm up to original position
 //           encoderDrive(TURN_SPEED,   -5, 5, 2.0); //turn left to straighten
 
-           telemetry.addData("Path", "Complete");
-           telemetry.update();
-           sleep(1000);  // pause to display final telemetry message.
-       }
+            telemetry.addData("Path", "Complete");
+            telemetry.update();
+            sleep(1000);  // pause to display final telemetry message.
+        }
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-       // encoderDrive(DRIVE_SPEED,  12,  12 , 2.0);  // S1: Forward 47 Inches with 5 Sec timeout
-      //  encoderDrive(TURN_SPEED,   7.5, -7.5, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-    //    encoderDrive(DRIVE_SPEED, 5, 5, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-  //      encoderDrive(TURN_SPEED,   -7.5, 7.5, 2.0);
+        // encoderDrive(DRIVE_SPEED,  12,  12 , 2.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //  encoderDrive(TURN_SPEED,   7.5, -7.5, 2.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //    encoderDrive(DRIVE_SPEED, 5, 5, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        //      encoderDrive(TURN_SPEED,   -7.5, 7.5, 2.0);
 //        encoderDrive(DRIVE_SPEED, 5, 5, 2.0);
 
 //        runtime.reset();
 
         //telemetry.addData("Path", "Complete");
         //telemetry.update();
-       // sleep(1000);  // pause to display final telemetry message.
+        // sleep(1000);  // pause to display final telemetry message.
     }
 
     /*
@@ -195,9 +231,8 @@ public class CCAutoEncoder extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the OpMode running.
      */
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
+    public void encoderDrive(double speed, double fLInches, double fRInches, double bLInches,
+                             double bRInches, double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -225,12 +260,12 @@ public class CCAutoEncoder extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (leftWheelsMotor.isBusy() && rightWheelsMotor.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (leftWheelsMotor.isBusy() && rightWheelsMotor.isBusy())) {
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d",
-                                            leftWheelsMotor.getCurrentPosition(), rightWheelsMotor.getCurrentPosition());
+                        leftWheelsMotor.getCurrentPosition(), rightWheelsMotor.getCurrentPosition());
                 telemetry.update();
             }
             // Stop all motion;
@@ -247,15 +282,15 @@ public class CCAutoEncoder extends LinearOpMode {
     // put new code right here not in the curly brckets MAINLY FOR ANISH SPECIFICALLY
 
     public void encoderDriveForArm(double speed,
-                             int targetPosition,
-                             double timeoutS) {
+                                   int targetPosition,
+                                   double timeoutS) {
         int newArmTarget;
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-           // newArmTarget = armMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            // newArmTarget = armMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             armMotor.setTargetPosition(targetPosition);
 
             // Turn On RUN_TO_POSITION
@@ -288,7 +323,7 @@ public class CCAutoEncoder extends LinearOpMode {
             //armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
             // Turn off RUN_TO_POSITION
-           // armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            // armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
@@ -346,7 +381,7 @@ public class CCAutoEncoder extends LinearOpMode {
     }
     public void openclaw()
     {
-    clawServo.setPosition(0);
+        clawServo.setPosition(0);
     }
     public void closeclaw()
     {
