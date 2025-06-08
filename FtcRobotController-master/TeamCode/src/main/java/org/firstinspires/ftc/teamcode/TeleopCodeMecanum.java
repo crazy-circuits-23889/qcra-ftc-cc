@@ -126,12 +126,10 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
                 frontLeft.setPower(leftFront);
 
                 // Start forearm code
-                if (gamepad2.dpad_up) {                            //swap up for down i think
+                while (gamepad2.dpad_up) {                            //swap up for down i think
                     forearm.setPower(0.25); // Move arm up
-                } else if (gamepad2.dpad_down) {
+                } while (gamepad2.dpad_down) {
                     forearm.setPower(-3.5); // Move arm down
-                } else {
-                    forearm.setPower(0); // Stop arm
                 }
                 forearm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -150,9 +148,9 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
                 // telemetry.update();
 
                 // Start arm code
-                if (gamepad2.right_trigger == 1) {
+                while (gamepad2.right_trigger == 1) {
                     arm.setPower(0.5); // Move arm up
-                } else if (gamepad2.left_trigger == 1) {
+                } if (gamepad2.left_trigger == 1) {
                     arm.setPower(-0.5); // Move arm down
                 } else if (gamepad2.right_bumper) {
                     arm.setPower(0); // Stop arm
